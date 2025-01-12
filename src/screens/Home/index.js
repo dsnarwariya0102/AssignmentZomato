@@ -14,9 +14,11 @@ import {Colors} from '../../utils/Colors';
 import Shoppingcart from 'react-native-vector-icons/AntDesign';
 import {debounce} from '../../utils/CommonUits';
 import {addCart} from '../../reducer/slices/cartSlice';
+import {useIsFocused} from '@react-navigation/native';
 
 const Home = props => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const cartList = useSelector(state => state.cart);
 
@@ -25,7 +27,7 @@ const Home = props => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [isFocused]);
 
   const getData = async () => {
     try {
@@ -44,8 +46,8 @@ const Home = props => {
   };
 
   const handleSearch = useCallback(
-    debounce(searchTerm => {
-      onSearch(searchTerm);
+    debounce(searchText => {
+      onSearch(searchText);
     }, 300), // Debounce for 300 milliseconds
     [onSearch],
   );
@@ -63,6 +65,8 @@ const Home = props => {
       });
 
       setFoodList(filterData);
+    } else {
+      getData();
     }
   };
 
